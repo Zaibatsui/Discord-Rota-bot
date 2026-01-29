@@ -172,12 +172,33 @@ const commands = [
   {
     name: 'setpicker',
     description: 'Manually set the current picker (admin)',
+    default_member_permissions: '8',
     options: [
       {
         name: 'user',
         description: 'User to set as current picker',
         type: 6,
         required: true
+      }
+    ]
+  },
+  {
+    name: 'pickfor',
+    description: 'Pick a game on behalf of another player (admin)',
+    default_member_permissions: '8',
+    options: [
+      {
+        name: 'user',
+        description: 'User to pick for',
+        type: 6,
+        required: true
+      },
+      {
+        name: 'game',
+        description: 'Name of the game',
+        type: 3,
+        required: true,
+        autocomplete: true
       }
     ]
   }
