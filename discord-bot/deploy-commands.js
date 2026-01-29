@@ -154,6 +154,18 @@ const commands = [
   {
     name: 'history',
     description: 'Show recent game sessions'
+  },
+  {
+    name: 'setpicker',
+    description: 'Manually set the current picker (admin)',
+    options: [
+      {
+        name: 'user',
+        description: 'User to set as current picker',
+        type: 6,
+        required: true
+      }
+    ]
   }
 ];
 
