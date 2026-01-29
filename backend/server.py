@@ -165,6 +165,9 @@ def create_new_session(guild_id: str, picker_id: str):
     save_guild_sessions(guild_id, sessions)
     return new_session
 
+class SetPickerRequest(BaseModel):
+    discord_id: str
+
 # API Routes
 
 @api_router.get("/")
