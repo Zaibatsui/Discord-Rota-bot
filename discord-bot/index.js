@@ -615,7 +615,7 @@ async function sendReminder(guildId, channel) {
 
 // Scheduled reminder - every Thursday at noon UK time
 cron.schedule('0 12 * * 4', async () => {
-  console.log('Running scheduled reminder...');
+  console.log('Running scheduled noon reminder...');
   
   try {
     // Get all guilds with reminder channels set
@@ -637,6 +637,53 @@ cron.schedule('0 12 * * 4', async () => {
     }
   } catch (error) {
     console.error('Scheduled reminder error:', error);
+  }
+}, {
+  timezone: 'Europe/London'
+});
+
+// Scheduled rota advancement - every Thursday at 10 PM UK time (after gaming night)
+cron.schedule('0 22 * * 4', async () => {
+  console.log('Running scheduled rota advancement...');
+  
+  try {
+    const settings = await apiGet('/rota/all-settings');
+    
+    if (settings) {
+      for (const setting of settings) {
+        try {
+          // Advance the rota for this guild
+          const result = await apiPost(`/rota/advance/${setting.guild_id}`, {});
+          
+          if (result && setting.reminder_channel_id) {
+            const channel = await client.channels.fetch(setting.reminder_channel_id);
+            if (channel) {
+              // Get new state
+              const data = await apiGet(`/rota/next/${setting.guild_id}`);
+              
+              if (data && data.current_picker) {
+                const embed = new EmbedBuilder()
+                  .setTitle('🔄 Rota Advanced!')
+                  .setDescription(`Gaming night is over! The rota has moved to the next person.`)
+                  .setColor(0x5865F2)
+                  .addFields({
+                    name: '🎯 Next Picker',
+                    value: `<@${data.current_picker.discord_id}> - it's your turn to pick for next week!`,
+                    inline: false
+                  })
+                  .setTimestamp();
+                
+                await channel.send({ embeds: [embed] });
+              }
+            }
+          }
+        } catch (err) {
+          console.error(`Failed to advance rota for guild ${setting.guild_id}:`, err.message);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Scheduled advancement error:', error);
   }
 }, {
   timezone: 'Europe/London'
