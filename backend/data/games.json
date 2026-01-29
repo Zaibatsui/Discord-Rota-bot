@@ -13,6 +13,38 @@
     {
       "name": "Peak",
       "image_url": null
+    },
+    {
+      "name": "Unrailed",
+      "image_url": null
+    },
+    {
+      "name": "Satisfactory",
+      "image_url": null
+    },
+    {
+      "name": "Factorio",
+      "image_url": null
+    },
+    {
+      "name": "Valheim",
+      "image_url": null
+    },
+    {
+      "name": "Division 2",
+      "image_url": null
+    },
+    {
+      "name": "Enshrouded",
+      "image_url": null
+    },
+    {
+      "name": "No Man Sky",
+      "image_url": null
+    },
+    {
+      "name": "Forts",
+      "image_url": null
     }
   ]
 }

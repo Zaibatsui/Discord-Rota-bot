@@ -30,6 +30,26 @@
       "game_name": null,
       "absentees": [],
       "completed": false
+    },
+    {
+      "id": "314377869860143105_20260129230832",
+      "guild_id": "314377869860143105",
+      "date": "2026-01-29T23:08:32.340328+00:00",
+      "picker_id": "314377524987559946",
+      "game_name": "Skipped (absent)",
+      "absentees": [
+        "314377524987559946"
+      ],
+      "completed": true
+    },
+    {
+      "id": "314377869860143105_20260129230900",
+      "guild_id": "314377869860143105",
+      "date": "2026-01-29T23:09:00.183338+00:00",
+      "picker_id": "314331396888068106",
+      "game_name": null,
+      "absentees": [],
+      "completed": false
     }
   ]
 }
