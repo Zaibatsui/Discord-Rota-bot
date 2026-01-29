@@ -108,7 +108,7 @@ const commands = [
       },
       {
         name: 'preview',
-        description: 'Preview a game with its image',
+        description: 'Preview a game with its image (admin)',
         type: 1,
         options: [
           {
