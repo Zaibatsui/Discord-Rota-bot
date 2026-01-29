@@ -600,6 +600,60 @@ client.on('interactionCreate', async (interaction) => {
         }
         break;
       }
+
+      case 'pickfor': {
+        const user = options.getUser('user');
+        const gameName = options.getString('game');
+        
+        // First set this user as the current picker
+        const setResult = await apiPost(`/rota/setpicker/${guildId}`, {
+          discord_id: user.id
+        });
+        
+        if (!setResult) {
+          await interaction.reply({
+            content: '❌ Failed - user is not in the rota.',
+            ephemeral: true
+          });
+          return;
+        }
+        
+        // Now pick the game on their behalf
+        const pickResult = await apiPost(`/rota/pick/${guildId}`, {
+          game_name: gameName,
+          picker_id: user.id
+        });
+        
+        if (pickResult) {
+          const embed = new EmbedBuilder()
+            .setTitle('🎉 Game Selected!')
+            .setDescription(`**${gameName}** has been selected for the next session!`)
+            .setColor(0x57F287)
+            .addFields({
+              name: 'Picked for',
+              value: `<@${user.id}>`,
+              inline: true
+            },
+            {
+              name: 'Set by',
+              value: `<@${interaction.user.id}>`,
+              inline: true
+            })
+            .setTimestamp();
+          
+          if (pickResult.game && pickResult.game.image_url) {
+            embed.setImage(pickResult.game.image_url);
+          }
+          
+          await interaction.reply({ embeds: [embed] });
+        } else {
+          await interaction.reply({
+            content: '❌ Failed to set game.',
+            ephemeral: true
+          });
+        }
+        break;
+      }
     }
   } catch (error) {
     console.error('Command error:', error);
