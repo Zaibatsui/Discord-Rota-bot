@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: rota-backend
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    volumes:
+      - rota-data:/app/data
+    environment:
+      - CORS_ORIGINS=*
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  discord-bot:
+    build: ./discord-bot
+    container_name: rota-discord-bot
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - rota-data:/app/data
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - STEAM_API_KEY=${STEAM_API_KEY}
+      - BACKEND_URL=http://backend:8001/api
+      - GAMING_DAY=4
+      - REMINDER_HOUR=12
+      - REMINDER_MINUTE=0
+      - TIMEZONE=Europe/London
+
+volumes:
+  rota-data:
