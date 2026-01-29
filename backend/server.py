@@ -79,6 +79,7 @@ class AbsenceRequest(BaseModel):
 
 class SkipRequest(BaseModel):
     discord_id: str
+    auto_skip: bool = False
 
 class SettingsUpdate(BaseModel):
     reminder_channel_id: Optional[str] = None
