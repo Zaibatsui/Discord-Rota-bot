@@ -459,6 +459,32 @@ async def get_history(guild_id: str):
     completed = [s for s in sessions if s.get("completed", False)]
     return list(reversed(completed))
 
+@api_router.post("/rota/setpicker/{guild_id}")
+async def set_picker(guild_id: str, request: SetPickerRequest):
+    rota = get_guild_rota(guild_id)
+    
+    if not rota["players"]:
+        raise HTTPException(status_code=400, detail="No players in rota")
+    
+    # Find the player index
+    player_index = None
+    for i, p in enumerate(rota["players"]):
+        if p["discord_id"] == request.discord_id:
+            player_index = i
+            break
+    
+    if player_index is None:
+        raise HTTPException(status_code=404, detail="Player not found in rota")
+    
+    # Set current index to this player
+    rota["current_index"] = player_index
+    save_guild_rota(guild_id, rota)
+    
+    # Create new session for this picker
+    create_new_session(guild_id, request.discord_id)
+    
+    return {"success": True, "current_picker": rota["players"][player_index]}
+
 # Settings Management
 @api_router.post("/rota/settings/{guild_id}")
 async def update_settings(guild_id: str, settings: SettingsUpdate):
