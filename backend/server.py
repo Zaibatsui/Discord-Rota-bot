@@ -283,6 +283,10 @@ async def list_all_games():
                 seen.add(game["name"].lower())
     return all_games
 
+class GameUpdate(BaseModel):
+    name: str
+    image_url: str
+
 @api_router.delete("/rota/games/{guild_id}/{game_name}")
 async def remove_game(guild_id: str, game_name: str):
     games = get_guild_games(guild_id)
