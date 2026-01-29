@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+yarn.lock
+yarn-error.log
+.env
+.env.*
+*.log
+.git
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
