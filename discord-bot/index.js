@@ -51,23 +51,15 @@ async function apiDelete(endpoint) {
 // Steam API helper to fetch game image
 async function fetchSteamGameImage(gameName) {
   try {
-    // Search for the game on Steam
+    // Use Steam Store search API
     const searchResponse = await axios.get(
-      `https://api.steampowered.com/ISteamApps/GetAppList/v2/`
+      `https://store.steampowered.com/api/storesearch/?term=${encodeURIComponent(gameName)}&l=en&cc=us`
     );
     
-    const apps = searchResponse.data.applist.apps;
-    const gameNameLower = gameName.toLowerCase();
-    
-    // Find exact or close match
-    const match = apps.find(app => 
-      app.name.toLowerCase() === gameNameLower ||
-      app.name.toLowerCase().includes(gameNameLower)
-    );
-    
-    if (match) {
-      // Steam store image URL format
-      return `https://cdn.cloudflare.steamstatic.com/steam/apps/${match.appid}/header.jpg`;
+    if (searchResponse.data && searchResponse.data.items && searchResponse.data.items.length > 0) {
+      const game = searchResponse.data.items[0];
+      // Use the header image format for better quality
+      return `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.id}/header.jpg`;
     }
     
     return null;
