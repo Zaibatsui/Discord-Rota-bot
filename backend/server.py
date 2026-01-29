@@ -373,7 +373,9 @@ async def skip_turn(guild_id: str, request: SkipRequest):
         raise HTTPException(status_code=400, detail="No players in rota")
     
     current_picker = rota["players"][rota["current_index"]]
-    if current_picker["discord_id"] != request.discord_id:
+    
+    # Allow skip if it's the user's turn OR if it's an auto-skip due to absence
+    if current_picker["discord_id"] != request.discord_id and not request.auto_skip:
         raise HTTPException(status_code=403, detail="Not your turn to skip")
     
     # Complete current session
@@ -383,7 +385,7 @@ async def skip_turn(guild_id: str, request: SkipRequest):
         for session in sessions:
             if session["id"] == current_session["id"]:
                 session["completed"] = True
-                session["game_name"] = "Skipped"
+                session["game_name"] = "Skipped (absent)" if request.auto_skip else "Skipped"
                 break
         save_guild_sessions(guild_id, sessions)
     
@@ -395,7 +397,7 @@ async def skip_turn(guild_id: str, request: SkipRequest):
     new_picker = rota["players"][rota["current_index"]]
     create_new_session(guild_id, new_picker["discord_id"])
     
-    return {"success": True}
+    return {"success": True, "new_picker": new_picker}
 
 @api_router.post("/rota/advance/{guild_id}")
 async def advance_rota(guild_id: str):
