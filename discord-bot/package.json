@@ -1,8 +1,13 @@
 {
-  "name": "discord-bot",
+  "name": "gaming-rota-bot",
   "version": "1.0.0",
+  "description": "Discord bot for managing gaming rota",
   "main": "index.js",
-  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node deploy-commands.js"
+  },
   "dependencies": {
     "@discordjs/rest": "^2.6.0",
     "axios": "^1.13.4",
