@@ -287,6 +287,24 @@ class GameUpdate(BaseModel):
     name: str
     image_url: str
 
+@api_router.post("/rota/games/update/{guild_id}")
+async def update_game(guild_id: str, update: GameUpdate):
+    games = get_guild_games(guild_id)
+    
+    # Find and update the game
+    found = False
+    for game in games:
+        if game["name"].lower() == update.name.lower():
+            game["image_url"] = update.image_url
+            found = True
+            break
+    
+    if not found:
+        raise HTTPException(status_code=404, detail="Game not found")
+    
+    save_guild_games(guild_id, games)
+    return {"success": True}
+
 @api_router.delete("/rota/games/{guild_id}/{game_name}")
 async def remove_game(guild_id: str, game_name: str):
     games = get_guild_games(guild_id)
