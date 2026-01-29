@@ -1,0 +1,12 @@
+{
+  "test_guild_123": [
+    {
+      "name": "Counter-Strike 2",
+      "image_url": "https://example.com/cs2.jpg"
+    },
+    {
+      "name": "Valorant",
+      "image_url": "https://example.com/valorant.jpg"
+    }
+  ]
+}

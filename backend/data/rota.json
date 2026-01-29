@@ -1,0 +1,13 @@
+{
+  "test_guild_123": {
+    "players": [
+      {
+        "discord_id": "test_user_456",
+        "username": "testuser1",
+        "display_name": "Test User 1",
+        "avatar_url": "https://example.com/avatar_test_user_456.png"
+      }
+    ],
+    "current_index": 0
+  }
+}

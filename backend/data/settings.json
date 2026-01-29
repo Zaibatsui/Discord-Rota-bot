@@ -1,0 +1,6 @@
+{
+  "test_guild_123": {
+    "guild_id": "test_guild_123",
+    "reminder_channel_id": "test_channel_123"
+  }
+}

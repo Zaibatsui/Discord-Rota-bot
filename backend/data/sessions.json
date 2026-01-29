@@ -1,0 +1,24 @@
+{
+  "test_guild_123": [
+    {
+      "id": "test_guild_123_20260129223344",
+      "guild_id": "test_guild_123",
+      "date": "2026-01-29T22:33:44.590479+00:00",
+      "picker_id": "test_user_456",
+      "game_name": "Skipped",
+      "absentees": [
+        "test_user_789"
+      ],
+      "completed": true
+    },
+    {
+      "id": "test_guild_123_20260129223345",
+      "guild_id": "test_guild_123",
+      "date": "2026-01-29T22:33:45.083067+00:00",
+      "picker_id": "test_user_789",
+      "game_name": null,
+      "absentees": [],
+      "completed": false
+    }
+  ]
+}
