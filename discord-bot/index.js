@@ -556,6 +556,26 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({ embeds: [embed] });
         break;
       }
+
+      case 'setpicker': {
+        const user = options.getUser('user');
+        const result = await apiPost(`/rota/setpicker/${guildId}`, {
+          discord_id: user.id
+        });
+        
+        if (result) {
+          await interaction.reply({
+            content: `✅ <@${user.id}> is now the current picker!`,
+            ephemeral: false
+          });
+        } else {
+          await interaction.reply({
+            content: '❌ Failed to set picker. Make sure the user is in the rota.',
+            ephemeral: true
+          });
+        }
+        break;
+      }
     }
   } catch (error) {
     console.error('Command error:', error);
