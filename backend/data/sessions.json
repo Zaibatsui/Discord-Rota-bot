@@ -77,6 +77,15 @@
       "game_name": "Peak",
       "absentees": [],
       "completed": false
+    },
+    {
+      "id": "314377869860143105_20260129234201",
+      "guild_id": "314377869860143105",
+      "date": "2026-01-29T23:42:01.445581+00:00",
+      "picker_id": "314331396888068106",
+      "game_name": "PEAK",
+      "absentees": [],
+      "completed": false
     }
   ]
 }
