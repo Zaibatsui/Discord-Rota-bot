@@ -419,7 +419,7 @@ client.on('interactionCreate', async (interaction) => {
             if (game.image_url) {
               embed.setImage(game.image_url);
             } else {
-              embed.setDescription('*No image available for this game*');
+              embed.setDescription('*No image available - use `/games update` to add one*');
             }
             
             await interaction.reply({ embeds: [embed] });
@@ -427,6 +427,43 @@ client.on('interactionCreate', async (interaction) => {
             await interaction.reply({
               content: `❌ Game "${gameName}" not found.`,
               ephemeral: true
+            });
+          }
+        } else if (subcommand === 'update') {
+          const gameName = options.getString('name');
+          let imageUrl = options.getString('image_url');
+          
+          await interaction.deferReply();
+          
+          // If no URL provided, try to fetch from Steam
+          if (!imageUrl) {
+            imageUrl = await fetchSteamGameImage(gameName);
+          }
+          
+          if (!imageUrl) {
+            await interaction.editReply({
+              content: `❌ Could not find image for "${gameName}" on Steam. Try providing a manual image URL.`
+            });
+            return;
+          }
+          
+          // Update the game
+          const result = await apiPost(`/rota/games/update/${guildId}`, {
+            name: gameName,
+            image_url: imageUrl
+          });
+          
+          if (result) {
+            const embed = new EmbedBuilder()
+              .setTitle(`✅ Updated: ${gameName}`)
+              .setColor(0x57F287)
+              .setImage(imageUrl)
+              .setTimestamp();
+            
+            await interaction.editReply({ embeds: [embed] });
+          } else {
+            await interaction.editReply({
+              content: `❌ Failed to update "${gameName}". Make sure the game exists.`
             });
           }
         } else if (subcommand === 'remove') {
