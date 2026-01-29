@@ -107,6 +107,20 @@ const commands = [
         type: 1
       },
       {
+        name: 'preview',
+        description: 'Preview a game with its image',
+        type: 1,
+        options: [
+          {
+            name: 'name',
+            description: 'Name of the game to preview',
+            type: 3,
+            required: true,
+            autocomplete: true
+          }
+        ]
+      },
+      {
         name: 'remove',
         description: 'Remove a game from the list',
         type: 1,
