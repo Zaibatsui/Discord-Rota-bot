@@ -405,6 +405,30 @@ client.on('interactionCreate', async (interaction) => {
           const games = await apiGet(`/rota/games/${guildId}`);
           const embed = buildGamesEmbed(games);
           await interaction.reply({ embeds: [embed] });
+        } else if (subcommand === 'preview') {
+          const gameName = options.getString('name');
+          const games = await apiGet(`/rota/games/${guildId}`);
+          const game = games?.find(g => g.name.toLowerCase() === gameName.toLowerCase());
+          
+          if (game) {
+            const embed = new EmbedBuilder()
+              .setTitle(`🎮 ${game.name}`)
+              .setColor(0x5865F2)
+              .setTimestamp();
+            
+            if (game.image_url) {
+              embed.setImage(game.image_url);
+            } else {
+              embed.setDescription('*No image available for this game*');
+            }
+            
+            await interaction.reply({ embeds: [embed] });
+          } else {
+            await interaction.reply({
+              content: `❌ Game "${gameName}" not found.`,
+              ephemeral: true
+            });
+          }
         } else if (subcommand === 'remove') {
           const gameName = options.getString('name');
           const result = await apiDelete(`/rota/games/${guildId}/${encodeURIComponent(gameName)}`);
