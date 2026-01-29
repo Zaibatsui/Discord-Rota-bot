@@ -121,6 +121,26 @@ const commands = [
         ]
       },
       {
+        name: 'update',
+        description: 'Update a game image (re-fetch from Steam or set manually)',
+        type: 1,
+        options: [
+          {
+            name: 'name',
+            description: 'Name of the game to update',
+            type: 3,
+            required: true,
+            autocomplete: true
+          },
+          {
+            name: 'image_url',
+            description: 'Manual image URL (leave empty to re-fetch from Steam)',
+            type: 3,
+            required: false
+          }
+        ]
+      },
+      {
         name: 'remove',
         description: 'Remove a game from the list',
         type: 1,
