@@ -9,5 +9,28 @@
       }
     ],
     "current_index": 0
+  },
+  "314377869860143105": {
+    "players": [
+      {
+        "discord_id": "314331396888068106",
+        "username": "pi_mai",
+        "display_name": "Pi",
+        "avatar_url": "https://cdn.discordapp.com/avatars/314331396888068106/c527bcf24cd7b82af18244a10a3d3b09.webp"
+      },
+      {
+        "discord_id": "315566096738418689",
+        "username": "glitch89",
+        "display_name": "`Glitch",
+        "avatar_url": "https://cdn.discordapp.com/avatars/315566096738418689/83d1467dbf7ec73c3741e7b8d3332733.webp"
+      },
+      {
+        "discord_id": "314377524987559946",
+        "username": "zaibatsui",
+        "display_name": "Zaibatsui",
+        "avatar_url": "https://cdn.discordapp.com/avatars/314377524987559946/6d7b4854f8b76aeec17b525c1a966735.webp"
+      }
+    ],
+    "current_index": 0
   }
 }

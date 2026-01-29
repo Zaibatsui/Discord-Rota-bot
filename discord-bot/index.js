@@ -444,13 +444,33 @@ client.on('interactionCreate', async (interaction) => {
 
       case 'cantattend': {
         const userId = interaction.user.id;
+        
+        // Check if this user is the current picker
+        const state = await apiGet(`/rota/state/${guildId}`);
+        const isCurrentPicker = state && state.players.length > 0 && 
+          state.players[state.current_index]?.discord_id === userId;
+        
         const result = await apiPost(`/rota/absence/${guildId}`, { discord_id: userId });
         
         if (result) {
-          await interaction.reply({
-            content: `📢 <@${userId}> cannot attend the next gaming session.`,
-            ephemeral: false
-          });
+          if (isCurrentPicker) {
+            // Auto-skip to next person if current picker is absent
+            await apiPost(`/rota/skip/${guildId}`, { discord_id: userId, auto_skip: true });
+            
+            // Get new current picker
+            const newState = await apiGet(`/rota/state/${guildId}`);
+            const newPicker = newState?.players[newState.current_index];
+            
+            await interaction.reply({
+              content: `📢 <@${userId}> cannot attend and was scheduled to pick.\n➡️ Rota advanced - <@${newPicker?.discord_id}> is now picking!`,
+              ephemeral: false
+            });
+          } else {
+            await interaction.reply({
+              content: `📢 <@${userId}> cannot attend the next gaming session.`,
+              ephemeral: false
+            });
+          }
         } else {
           await interaction.reply({
             content: '❌ Failed to mark absence.',
