@@ -36,16 +36,16 @@ function App() {
 
         <div className="p-5 sm:p-7">
           <div className="mb-7 text-center">
-            <div className="mx-auto mb-5 h-24 w-24">
+            <div className="mx-auto mb-5 h-28 w-28">
               {avatarOk ? (
                 <img
                   src="/avatar.png"
                   alt="Rota bot"
                   onError={() => setAvatarOk(false)}
-                  className="h-24 w-24 rounded-full object-cover shadow-[0_0_45px_-10px_rgba(247,148,30,0.75)] ring-2 ring-[#f7941e]/70"
+                  className="h-28 w-28 rounded-full object-cover shadow-[0_0_45px_-10px_rgba(247,148,30,0.75)] ring-2 ring-[#f7941e]/70"
                 />
               ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#15171a] shadow-[0_0_45px_-10px_rgba(247,148,30,0.75)] ring-2 ring-[#f7941e]/70">
+                <div className="flex h-28 w-28 items-center justify-center rounded-full bg-[#15171a] shadow-[0_0_45px_-10px_rgba(247,148,30,0.75)] ring-2 ring-[#f7941e]/70">
                   <span className="text-4xl font-black text-[#f7941e]">K</span>
                 </div>
               )}
