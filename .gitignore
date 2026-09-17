@@ -27,3 +27,6 @@ dist/
 npm-debug.log*
 .DS_Store
 *.pem
+
+# Per-deployment frontend config
+frontend/public/config.js
