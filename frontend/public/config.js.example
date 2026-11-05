@@ -1,0 +1,3 @@
+// Copy to public/config.js on a deployment that needs a non-default API host.
+// public/config.js is gitignored, so real hostnames stay out of the repo.
+window.__ROTA_API_URL__ = 'https://api.example.com';
