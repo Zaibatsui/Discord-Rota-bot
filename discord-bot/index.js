@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, EmbedBuilder, ActivityType } from 'discord.js';
+import { Client, GatewayIntentBits, EmbedBuilder, ActivityType, Events } from 'discord.js';
 import dotenv from 'dotenv';
 import cron from 'node-cron';
 import axios from 'axios';
@@ -404,7 +404,7 @@ cron.schedule('0 13 * * *', async () => {
 }, { timezone: 'Europe/London' });
 
 // Bot ready
-client.once('ready', () => {
+client.once(Events.ClientReady, () => {
   console.log(`✅ Bot logged in as ${client.user.tag}`);
   client.user.setActivity('Gaming Rota', { type: ActivityType.Watching });
 });
