@@ -99,13 +99,63 @@ function buildHistoryEmbed(sessions) {
   return embed;
 }
 
+// Gaming night scheduling helpers
+const ROTA_TZ = 'Europe/London';
+const GAMING_NIGHT_WEEKDAY = 4; // Thursday (0 = Sunday)
+const ROTA_ADVANCE_HOUR = 22;   // the rota advances at 22:00, so after that the night is done
+
+// Break a moment down into the calendar date and hour as seen in the rota's timezone.
+function zonedNow(now = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-GB', {
+      timeZone: ROTA_TZ,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', hour12: false
+    }).formatToParts(now).map(({ type, value }) => [type, value])
+  );
+  const year = Number(parts.year);
+  const month = Number(parts.month);
+  const day = Number(parts.day);
+  // Anchor at midday UTC so adding whole days can never slip across a DST boundary.
+  const middayUTC = Date.UTC(year, month - 1, day, 12);
+  return {
+    hour: Number(parts.hour) % 24,
+    weekday: new Date(middayUTC).getUTCDay(),
+    middayUTC
+  };
+}
+
+// How many days until the next gaming night, and the date it falls on.
+function nextGamingNight(now = new Date()) {
+  const today = zonedNow(now);
+  let daysAway = (GAMING_NIGHT_WEEKDAY - today.weekday + 7) % 7;
+  if (daysAway === 0 && today.hour >= ROTA_ADVANCE_HOUR) daysAway = 7;
+  return { daysAway, date: new Date(today.middayUTC + daysAway * 86400000) };
+}
+
+function formatGamingNight(date) {
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'UTC', weekday: 'long', day: 'numeric', month: 'long'
+  }).format(date);
+}
+
+// One line saying when the next gaming night is, in plain English.
+function gamingNightBlurb(now = new Date()) {
+  const { daysAway, date } = nextGamingNight(now);
+  const when = formatGamingNight(date);
+  if (daysAway === 0) return `**Tonight** is gaming night! (${when})`;
+  if (daysAway === 1) return `Gaming night is **tomorrow** — ${when}.`;
+  if (daysAway <= 3) return `Gaming night is **${when}** — only ${daysAway} days away!`;
+  return `Gaming night is **${when}** — ${daysAway} days away.`;
+}
+
 // Send reminder
 async function sendReminder(guildId, channel) {
   const data = await apiGet(`/rota/next/${guildId}`);
   if (!data) return;
   const embed = new EmbedBuilder()
     .setTitle('🔔 Gaming Night Reminder!')
-    .setDescription('Tonight is gaming night!')
+    .setDescription(gamingNightBlurb())
     .setColor(0xFF9500)
     .setTimestamp();
   if (data.current_session?.game_name) {
