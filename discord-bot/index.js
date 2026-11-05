@@ -168,6 +168,28 @@ async function sendReminder(guildId, channel) {
   await channel.send({ embeds: [embed] });
 }
 
+// Chase the picker by DM while the next session still has no game.
+// Returns true only when a DM actually went out, so the caller can log honestly.
+async function nudgePicker(guildId) {
+  const data = await apiGet(`/rota/next/${guildId}`);
+  const picker = data?.current_picker;
+  const session = data?.current_session;
+  if (!picker || !session) return false;
+  if (session.game_name) return false;                                     // already picked
+  if ((session.absentees || []).includes(picker.discord_id)) return false; // told us they're out
+
+  const embed = new EmbedBuilder()
+    .setTitle('🎮 Your turn to pick!')
+    .setDescription(`${gamingNightBlurb()}\n\nNo game is set yet and you're up — use \`/pick [game]\` in the server to choose one.`)
+    .setColor(0xFF9500)
+    .setFooter({ text: "Can't make it? Use /cantattend and the rota will move on." })
+    .setTimestamp();
+
+  const user = await client.users.fetch(picker.discord_id);
+  await user.send({ embeds: [embed] });
+  return true;
+}
+
 // Command handler
 client.on('interactionCreate', async (interaction) => {
   // Autocomplete
@@ -365,6 +387,18 @@ cron.schedule('0 22 * * 4', async () => {
       } catch (e) {
         console.error(`Failed to advance rota for guild ${s.guild_id}:`, e.message);
       }
+    }
+  }
+}, { timezone: 'Europe/London' });
+
+// Daily picker nudge - 1 PM UK time, every day until a game is chosen
+cron.schedule('0 13 * * *', async () => {
+  console.log('Running daily picker nudge...');
+  for (const guild of client.guilds.cache.values()) {
+    try {
+      if (await nudgePicker(guild.id)) console.log(`Nudged the picker in guild ${guild.id}.`);
+    } catch (e) {
+      console.error(`Failed to nudge picker for guild ${guild.id}:`, e.message);
     }
   }
 }, { timezone: 'Europe/London' });
